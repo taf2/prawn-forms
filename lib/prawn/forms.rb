@@ -19,6 +19,23 @@ module Prawn
 
     end
 
+    def sig_field(name, x, y, w, h, opts = {})
+      x, y = map_to_absolute(x, y)
+      field_dict = {:T => PDF::Core::LiteralString.new(name),
+                    :DA => PDF::Core::LiteralString.new("/Helv 0 Tf 0 g"),
+                    :F => 4,
+                    :Ff => flags_from_options(opts),
+                    :BS => {:Type => :Border, :W => 1, :S => :S},
+                    :MK => {:BC => [0, 0, 0]},
+                    :Rect => [x, y, x + w, y - h]}
+
+      if opts[:default]
+        field_dict[:V] = PDF::Core::LiteralString.new(opts[:default])
+      end
+
+      add_interactive_field(:Sig, field_dict)
+    end
+
     def text_field(name, x, y, w, h, opts = {})
       x, y = map_to_absolute(x, y)
 
